@@ -95,7 +95,6 @@ class Juchats(object):
         dialog_id = await self.get_dialog_id()
         model_id = await self.get_model_id()
         _type = await self.get_type()
-        print(f"dialog_id: {dialog_id}, model_id: {model_id}")
         async with websockets.connect(APIS.WSS.format(self.token),
                                       extra_headers=self._header) as ws:
             message = {
