@@ -69,7 +69,7 @@ async def api():
 
 # Available Models
 
-By 2024-07-25, the available models are:
+By 2024-07-25, the available models (may be outdated) are:
 
 | Model ID | Backend Model Name                 | Front Model Name         |
 | -------- | ---------------------------------- | ------------------------ |
@@ -90,12 +90,19 @@ By 2024-07-25, the available models are:
 | 20       | gpt-4o-mini-2024-07-18             | GPT4o-mini               |
 | 21       | meta-llama/llama-3.1-405b-instruct | Llama3.1 405B            |
 
-## Get latest models
+## Get real time available models
 
 ```python
+import os
 from juchats.chat import Juchats
-juchats = Juchats()
-print(juchats.get_models())
+from dotenv import load_dotenv
+import asyncio
+load_dotenv()
+token = os.getenv('JTOKEN')
+juchats = Juchats(token, model='gpt-4o-2024-05-13')
+print(
+    asyncio.run(juchats.get_models())
+)
 ```
 
 # Note

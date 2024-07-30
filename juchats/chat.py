@@ -45,7 +45,7 @@ class Juchats(object):
         for mode in self._modes:
             print(f"{mode.id}: {mode.name}")
 
-    async def modes(self) -> typing.List[Mode]:
+    async def get_models(self)->typing.List[Mode]:
         async with httpx.AsyncClient() as client:
             response = await client.get(APIS.MODES, headers=self._header)
             data = response.json()['data']
