@@ -1,6 +1,12 @@
+<div align="center">
+<figure style="text-align: center; radius:10pt">
+    <img src="https://s3.bmp.ovh/imgs/2024/07/29/b6995f3a712d6586.png" width=239pt radius=10pt>
+</figure>
+</div>
+
 # [Juchats](https://dlj.one/RNFYxz9) API wrapper
 
-<img src='https://s3.bmp.ovh/imgs/2024/07/29/b6995f3a712d6586.png' width=132>
+`juchats` lib is a Python library designed for interacting with the Juchats API, enabling seamless integration of chat functionalities into your applications. By utilizing this library, developers can leverage the power of advanced models like GPT-4, Claude Mezzo, and deepseek to perform various chat-related tasks.
 
 # Installation
 
@@ -8,15 +14,17 @@
 pip3 install juchats
 ```
 
-# Example
+# Usage
 
-First, you need to get the token from [Juchats](https://dlj.one/RNFYxz9). And put it in the `.env` file.
+First, obtain your token from from [Juchats](https://dlj.one/RNFYxz9) official website, and place it into a `.env` file.
 
 ```bash
 JTOKEN=your_token
 ```
 
-## Chat
+## Basic Chat Interaction
+
+This example demonstrates a simple chat interaction where we ask the model to compare two floating-point numbers.
 
 ```python
 import os
@@ -30,7 +38,7 @@ async def api():
     juchats = Juchats(token, model='deepseek-chat')
 
     async with juchats:
-        await juchats.chat("3.11 3.9 两个浮点数谁大？具体分析一下，给出你的原因", show_stream=True)
+        await juchats.chat("3.11, 3.9 两个浮点数谁大？具体分析一下，给出你的原因", show_stream=True)
 
 if __name__ == '__main__':
     asyncio.run(api())
@@ -41,9 +49,11 @@ if __name__ == '__main__':
 '''
 ```
 
-## Structured output
+## Structured JSON output
 
-```python
+This example demonstrates how to obtain structured JSON output from the chat API.
+
+````python
 import os
 from juchats.chat import Juchats
 from dotenv import load_dotenv
@@ -53,19 +63,29 @@ load_dotenv()
 async def api():
     token = os.getenv('JTOKEN')
     juchats = Juchats(token, model='deepseek-chat')
-    prompt = "3.11 3.9 两个浮点数谁大？具体分析一下，给出你的原因。以 json 格式输出。示例 {\"a\": 3.11, \"b\": 3.9, \"result\": \"a\"}"
+    prompt = "每个月有多少天？以 JSON 格式给出答案，例如：{\"January\": 31, \"February\": 28, ...}"
     async with juchats:
         text = await juchats.chat(prompt)
         print(text)
 
 ''' Output
+```json
 {
-    "a": 3.11,
-    "b": 3.9,
-    "result": "a"
+    "January": 31,
+    "February": 28,
+    "March": 31,
+    "April": 30,
+    "May": 31,
+    "June": 30,
+    "July": 31,
+    "August": 31,
+    "September": 30,
+    "October": 31,
+    "November": 30,
+    "December": 31
 }
 '''
-```
+````
 
 # Available Models
 
@@ -92,6 +112,8 @@ By 2024-07-25, the available models (may be outdated) are:
 
 ## Get real time available models
 
+Dynamically retrieve the latest available models from the Juchats API.
+
 ```python
 import os
 from juchats.chat import Juchats
@@ -107,7 +129,7 @@ print(
 
 # Note
 
-- `show_stream=True` will show the stream of the chat, `show_stream=False` will not show the stream of the chat.
-- `model` is the backend model name, you can find it from the table above.
-- `token` is the token of the chat, you can get it from [Juchats](https://dlj.one/RNFYxz9).
-- QPS limit: $n \leq 3$ QPS, if you need more, please use deepseek API or OpenAI API.
+- **Streaming**: Set `show_stream=True` to display the chat response in real-time. Use `show_stream=False` to disable it.
+- **Model Selection**: Specify the backend model name with the `model` parameter. Refer to the available models table above for options.
+- **API Token**: Obtain your token from [Juchats](https://dlj.one/RNFYxz9) and use it to authenticate requests.
+- **Rate Limiting**: The API supports up to 3 queries per second (QPS). For higher limits, consider using the Deepseek API or OpenAI API.
