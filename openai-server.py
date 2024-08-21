@@ -4,7 +4,6 @@ from fastapi.responses import StreamingResponse  # Updated import
 from pydantic import BaseModel
 from juchats.chat import Juchats
 import time
-import logging
 import json
 import asyncio
 from loguru import logger
@@ -32,7 +31,8 @@ class ChatCompletionRequest(BaseModel):
 @app.post("/v1/chat/completions")
 async def chat_completion(request: Request, chat_request: ChatCompletionRequest):
     try:
-        api_key = request.headers.get('Authorization', '').replace('Bearer ', '')
+        api_key = request.headers.get(
+            'Authorization', '').replace('Bearer ', '')
         if not api_key:
             raise HTTPException(status_code=401, detail="Missing API key")
 
