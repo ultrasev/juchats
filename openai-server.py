@@ -26,6 +26,7 @@ class ChatCompletionRequest(BaseModel):
     temperature: float = 0.7
     max_tokens: int = 64
     top_p: float = 1
+    stream: bool = True
 
 
 @app.post("/v1/chat/completions")
@@ -42,20 +43,26 @@ async def chat_completion(request: Request, chat_request: ChatCompletionRequest)
         user_message = [msg['content']
                         for msg in chat_request.messages if msg['role'] == 'user'].pop()
         prompt = f"{user_message}"
-        logger.info(f"Prompt: {prompt}")
+        logger.info(f"inputing prompt: {prompt}")
 
-        async def event_generator():
-            try:
-                async with juchats:
-                    async for chunk in juchats.stream_chat(prompt):
-                        yield f"data: {json.dumps(format_chunk(chunk, chat_request))}\n\n"
-                yield "data: [DONE]\n\n"
-            except Exception as e:
-                error_message = f"Error during streaming: {str(e)}"
-                logger.error(error_message)
-                yield f"data: {json.dumps({'error': error_message})}\n\n"
+        if chat_request.stream:
+            async def event_generator():
+                try:
+                    async with juchats:
+                        async for chunk in juchats.stream_chat(prompt):
+                            yield f"data: {json.dumps(format_chunk(chunk, chat_request))}\n\n"
+                    yield "data: [DONE]\n\n"
+                except Exception as e:
+                    error_message = f"Error during streaming: {str(e)}"
+                    logger.error(error_message)
+                    yield f"data: {json.dumps({'error': error_message})}\n\n"
 
-        return StreamingResponse(event_generator(), media_type="text/event-stream")
+            return StreamingResponse(event_generator(), media_type="text/event-stream")
+        else:
+            async with juchats:
+                response = await juchats.chat(prompt)
+
+            return format_non_stream_response(response, chat_request)
 
     except Exception as e:
         error_message = f"Error processing request: {str(e)}"
@@ -78,6 +85,34 @@ def format_chunk(chunk, chat_request):
                 "finish_reason": None
             }
         ]
+    }
+
+
+def format_non_stream_response(response, chat_request):
+    return {
+        "choices": [
+            {
+                "finish_reason": "stop",
+                "index": 0,
+                "message": {
+                    "content": response,
+                    "role": "assistant"
+                },
+                "logprobs": None
+            }
+        ],
+        "created": int(time.time()),
+        "id": f"chatcmpl-{int(time.time())}",
+        "model": chat_request.model,
+        "object": "chat.completion",
+        "usage": {
+            # This is a rough estimate
+            "completion_tokens": len(response.split()),
+            # This is a rough estimate
+            "prompt_tokens": len(chat_request.messages[-1]['content'].split()),
+            # This is a rough estimate
+            "total_tokens": len(response.split()) + len(chat_request.messages[-1]['content'].split())
+        }
     }
 
 
