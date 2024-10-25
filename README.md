@@ -91,27 +91,7 @@ async def api():
 ````
 
 # Available Models
-
-By 2024-07-25, the available models (may be outdated) are:
-
-| Model ID | Backend Model Name                 | Front Model Name         |
-| -------- | ---------------------------------- | ------------------------ |
-| 5        | claude-3-haiku-20240307            | Claude Mezzo             |
-| 6        | claude-3-opus-20240229             | Claude3 Opus             |
-| 7        | mistralai/mixtral-8x22b-instruct   | Mixtral Forte            |
-| 9        | gpt-4-turbo-2024-04-09             | GPT Mezzo                |
-| 10       | gpt-4-turbo-2024-04-09             | GPT Forte                |
-| 11       | dall-e-3                           | DALL · E3                |
-| 12       | meta-llama/llama-3-70b-instruct    | Llama3 70B               |
-| 13       | google/gemini-pro-1.5              | Gemini 1.5 Pro           |
-| 14       | deepseek-chat                      | Deepseek                 |
-| 15       | google/gemini-flash-1.5            | Gemini-flash             |
-| 16       | gpt-4o-2024-05-13                  | GPT4o                    |
-| 17       | claude-3-opus-20240229             | Claude3 Opus(100K)       |
-| 18       | Stable Image Ultra                 | Stable Diffusion 3 Ultra |
-| 19       | claude-3-5-sonnet-20240620         | Claude 3.5 Sonnet        |
-| 20       | gpt-4o-mini-2024-07-18             | GPT4o-mini               |
-| 21       | meta-llama/llama-3.1-405b-instruct | Llama3.1 405B            |
+![models](https://nextjs-template-2.pages.dev/api/juchatmodels)
 
 ## Get real time available models
 
