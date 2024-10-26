@@ -101,10 +101,11 @@ Dynamically retrieve the latest available models from the Juchats API.
 import os
 from juchats.chat import Juchats
 from dotenv import load_dotenv
-import asyncio
+
 load_dotenv()
 token = os.getenv('JTOKEN')
-juchats = Juchats(token, model='gpt-4o-2024-05-13')
+
+juchats = Juchats(token, model='ol-mini')
 print(
     asyncio.run(juchats.get_models())
 )
