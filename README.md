@@ -1,6 +1,6 @@
 <div align="center">
 <figure style="text-align: center; radius:10pt">
-    <img src="https://s3.bmp.ovh/imgs/2024/07/29/b6995f3a712d6586.png" width=239pt radius=10pt>
+    <img src="https://s3.bmp.ovh/imgs/2024/07/29/b6995f3a712d6586.png" width=139pt radius=10pt>
 </figure>
 
 ![visitors](https://visitor-badge.laobi.icu/badge?page_id=ultrasev.juchats&left_color=green&right_color=red) [![GitHub](https://img.shields.io/github/stars/ultrasev/juchats?style=social)](https://github.com/ultrasev/juchats)
@@ -91,7 +91,7 @@ async def api():
 ````
 
 # Available Models
-![models](https://nextjs-template-2.pages.dev/api/juchatmodels)
+![models](https://apionpages.cufo.cc/api/juchatmodels)
 
 ## Get real time available models
 
