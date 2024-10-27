@@ -118,6 +118,9 @@ Backend model name 是代码中使用的模型名称，front name 是在 Juchats
 
 ![models](https://apionpages.cufo.cc/api/juchatmodels)
 
+以上模型列表可能有几分钟的延迟，如果需要实时获取，请使用 `get_models` 方法。
+
+
 ## 获取实时可用模型
 
 动态获取 Juchats API 最新可用的模型。
