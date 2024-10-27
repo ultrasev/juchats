@@ -15,6 +15,7 @@ fastapi = "^0.112.1"
 loguru = "^0.7.2"
 uvicorn = "^0.30.6"
 redislite = "^6.2.912183"
+python-dotenv = "^1.0.1"
 
 
 [build-system]

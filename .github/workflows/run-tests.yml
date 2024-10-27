@@ -1,0 +1,30 @@
+name: Run Tests
+
+on:
+  push:
+    branches: add-tests
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          poetry install
+      - name: Install pytest
+        run: |
+          poetry add pytest pytest-asyncio
+      - name: Run tests
+        env:
+          JTOKEN: ${{ secrets.JTOKEN }}
+        run: |
+          poetry run pytest tests/
