@@ -3,8 +3,6 @@ name: Run Tests
 on:
   push:
     branches: add-tests
-  pull_request:
-    branches: add-tests
 
 jobs:
   test:
@@ -22,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
+      - name: Install pytest
+        run: |
+          poetry add pytest pytest-asyncio
       - name: Run tests
         env:
           JTOKEN: ${{ secrets.JTOKEN }}
