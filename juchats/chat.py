@@ -13,23 +13,29 @@ import redislite
 from .configs import APIS, HEADERS
 from .types import Mode
 
+
 def get_headers(token: str):
     headers = HEADERS
     headers['jtoken'] = token
     return headers
 
+
 class Juchats(object):
     _modes = None
     _redis = redislite.Redis('/tmp/juchats_redis.db')
 
-    def __init__(self, token: str, model: str = "gpt-4o-2024-05-13"):
+    def __init__(self, token: str, model: str = "deepseek-chat"):
         self.token = token
         self.model = model
         self._header = get_headers(token)
         self._model_id = None
         self._dialog_id = None
+        self._initialized = False
 
-    async def __aenter__(self):
+    async def initialize(self):
+        if self._initialized:
+            return
+
         available_models = await self.get_models()
         for mode in available_models:
             if mode.name == self.model:
@@ -41,10 +47,13 @@ class Juchats(object):
                 print(mode.id, mode.name)
             raise ValueError(f"Model {self.model} not found")
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        pass
+        self._initialized = True
 
-    async def get_models(self)->typing.List[Mode]:
+    async def _ensure_initialized(self):
+        if not self._initialized:
+            await self.initialize()
+
+    async def get_models(self) -> typing.List[Mode]:
         # Try to get models from Redis cache
         cached_models = self._redis.get('models')
         if cached_models:
@@ -108,6 +117,7 @@ class Juchats(object):
         query: str,
         show_stream: bool = False,
     ):
+        await self._ensure_initialized()
         dialog_id = await self.get_dialog_id()
         model_id = await self.get_model_id()
         _type = await self.get_type()
@@ -151,6 +161,7 @@ class Juchats(object):
         self,
         query: str,
     ):
+        await self._ensure_initialized()
         dialog_id = await self.get_dialog_id()
         model_id = await self.get_model_id()
         _type = await self.get_type()
