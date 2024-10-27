@@ -7,27 +7,34 @@
 
 </div>
 
-# [Juchats](https://dlj.one/RNFYxz9) API wrapper
+# [Juchats](https://dlj.one/RNFYxz9) API 封装
 
-`juchats` lib is a Python library designed for interacting with the Juchats API, enabling seamless integration of chat functionalities into your applications. By utilizing this library, developers can leverage the power of advanced models like GPT-4, Claude Mezzo, and deepseek to perform various chat-related tasks.
+[English](README_EN.md) | [中文](README.md)
 
-# Installation
+C 大产品 [hermchats](https://hermchats.com) 的 API 封装，可以无缝集成到代码中，用于数据分析、清洗或者对话生成都还不错。支持 GPT-4、o1-mini、Claude Sonnet、deepseek 等一众模型。 Hermchats 新模型上的很快，像 `o1-mini` 这样的模型，官方上线后，Hermchats 很快就会支持。
+
+针对不同模型，免费用户每天都有几十次到上千次不等的使用次数，比如，每天可以使用 claude-sonnet-3.5 进行 30 轮对话，用 deepseek 进行 10000 次对话，非常良心的网站，有需要的可以付费支持一下 [hermchats](https://hermchats.com)。
+
+# 安装
 
 ```bash
 pip3 install juchats
 ```
 
-# Usage
+# 使用方法
 
-First, obtain your token from from [Juchats](https://dlj.one/RNFYxz9) official website, and place it into a `.env` file.
+首先，从 [Juchats](https://dlj.one/RNFYxz9) 官方网站获取令牌（jtoken），并将其放入 `.env` 文件中。
+令牌获取方式就很简单了，浏览器上开 F12，刷新一下界面，随便找一个带有 hermchats.com 的链接，从 Cookie 中找到 `jtoken` 字段，复制即可。
 
 ```bash
 JTOKEN=your_token
 ```
 
-## Basic Chat Interaction
+# 示例
 
-This example demonstrates a simple chat interaction where we ask the model to compare two floating-point numbers.
+## 异步对话生成
+
+使用 `deepseek-chat` 模型，以异步方式进行对话生成。
 
 ```python
 import os
@@ -47,16 +54,14 @@ if __name__ == '__main__':
     asyncio.run(api())
 
 
-''' Output
+''' 输出
 3.11 大，因为 3.11 > 3.9
 '''
 ```
 
-## Structured JSON output
+## 结构化 JSON 输出
 
-This example demonstrates how to obtain structured JSON output from the chat API.
-
-````python
+```python
 import os
 from juchats.chat import Juchats
 from dotenv import load_dotenv
@@ -71,8 +76,7 @@ async def api():
         text = await juchats.chat(prompt)
         print(text)
 
-''' Output
-```json
+''' 输出
 {
     "January": 31,
     "February": 28,
@@ -88,14 +92,35 @@ async def api():
     "December": 31
 }
 '''
-````
+```
 
-# Available Models
+## 参数设置
+
+### 模型选择
+
+Juchats 支持多种模型，您可以在创建 Juchats 实例时指定模型，完整的模型列表可以参考下面。
+
+```python
+juchats = Juchats(token, model='gpt-4')
+```
+
+### 流式输出
+
+要启用流式输出，请在调用 `chat` 方法时设置 `show_stream=True`，不然会返回一个字符串。
+
+```python
+await juchats.chat("你好，请介绍一下你自己。", show_stream=True)
+```
+
+# 可用模型
+
+Backend model name 是代码中使用的模型名称，front name 是在 Juchats 网站上显示的模型名称。前者是给代码用的，后者是给用户看的。
+
 ![models](https://apionpages.cufo.cc/api/juchatmodels)
 
-## Get real time available models
+## 获取实时可用模型
 
-Dynamically retrieve the latest available models from the Juchats API.
+动态获取 Juchats API 最新可用的模型。
 
 ```python
 import os
@@ -111,9 +136,15 @@ print(
 )
 ```
 
-# Note
+# 注意事项
 
-- **Streaming**: Set `show_stream=True` to display the chat response in real-time. Use `show_stream=False` to disable it.
-- **Model Selection**: Specify the backend model name with the `model` parameter. Refer to the available models table above for options.
-- **API Token**: Obtain your token from [Juchats](https://dlj.one/RNFYxz9) and use it to authenticate requests.
-- **Rate Limiting**: The API supports up to 3 queries per second (QPS). For higher limits, consider using the Deepseek API or OpenAI API.
+- **速率限制**：API 支持每秒最多 3 次查询（QPS），减少调用频率。
+- **模型选择**：指定模型时，使用 backend model name。
+
+## 贡献
+
+欢迎贡献！请随时提交问题或拉取请求。
+
+## 许可证
+
+本项目采用 MIT 许可证。详情请参阅 [LICENSE](LICENSE) 文件。
