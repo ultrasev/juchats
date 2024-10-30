@@ -1,0 +1,44 @@
+name: Deploy juchats to mnl Server
+
+on:
+  push:
+    branches:
+      - deploy-vps
+  schedule:
+    - cron: '30 3 * * *' # 每天3点30分触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Create .env file
+        env:
+          ENV_CONTENT: ${{ secrets.JUCHATS_ENV }}
+        run: |
+          echo "$ENV_CONTENT" | base64 -d >> .env
+
+      - name: Deploy to server
+        env:
+          SERVER_USER: root
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_PORT: 7058
+          PROJECT_DIR: juchats
+        run: |
+          ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP "mkdir -p /app/$PROJECT_DIR"
+          scp -P $SERVER_PORT -r ./* $SERVER_USER@$SERVER_IP:/app/$PROJECT_DIR
+          ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP << EOF
+            set -e
+            cd /app/$PROJECT_DIR
+            docker-compose down --remove-orphans
+            docker-compose up -d --build
+            echo "Deployment completed successfully"
+          EOF
