@@ -24,7 +24,7 @@ jobs:
         env:
           ENV_CONTENT: ${{ secrets.JUCHATS_ENV }}
         run: |
-          echo "$ENV_CONTENT" | base64 -d >> .env
+          echo "$ENV_CONTENT" | base64 -d > ./.env
 
       - name: Deploy to server
         env:
