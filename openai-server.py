@@ -48,9 +48,8 @@ async def chat_completion(request: Request, chat_request: ChatCompletionRequest)
         if chat_request.stream:
             async def event_generator():
                 try:
-                    async with juchats:
-                        async for chunk in juchats.stream_chat(prompt):
-                            yield f"data: {json.dumps(format_chunk(chunk, chat_request))}\n\n"
+                    async for chunk in juchats.stream_chat(prompt):
+                        yield f"data: {json.dumps(format_chunk(chunk, chat_request))}\n\n"
                     yield "data: [DONE]\n\n"
                 except Exception as e:
                     error_message = f"Error during streaming: {str(e)}"
