@@ -34,7 +34,8 @@ jobs:
           PROJECT_DIR: juchats
         run: |
           ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP "mkdir -p /app/$PROJECT_DIR"
-          scp -P $SERVER_PORT -r ./* $SERVER_USER@$SERVER_IP:/app/$PROJECT_DIR
+          scp -P $SERVER_PORT .env $SERVER_USER@$SERVER_IP:/app/$PROJECT_DIR/
+          scp -P $SERVER_PORT -r ./* $SERVER_USER@$SERVER_IP:/app/$PROJECT_DIR/
           ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP << EOF
             set -e
             cd /app/$PROJECT_DIR
