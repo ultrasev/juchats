@@ -7,7 +7,7 @@
 
 </div>
 
-# [Juchats](https://dlj.one/RNFYxz9) API wrapper
+# [Juchats](https://ioly.cc/RNFYxz9) API wrapper
 
 [English](README_EN.md) | [中文](README.md)
 
@@ -21,7 +21,7 @@ pip3 install juchats
 
 # Usage
 
-First, obtain your token from from [Juchats](https://dlj.one/RNFYxz9) official website, and place it into a `.env` file.
+First, obtain your token from from [Juchats](https://ioly.cc/RNFYxz9) official website, and place it into a `.env` file.
 
 ```bash
 JTOKEN=your_token
@@ -117,5 +117,5 @@ print(
 
 - **Streaming**: Set `show_stream=True` to display the chat response in real-time. Use `show_stream=False` to disable it.
 - **Model Selection**: Specify the backend model name with the `model` parameter. Refer to the available models table above for options.
-- **API Token**: Obtain your token from [Juchats](https://dlj.one/RNFYxz9) and use it to authenticate requests.
+- **API Token**: Obtain your token from [Juchats](https://ioly.cc/RNFYxz9) and use it to authenticate requests.
 - **Rate Limiting**: The API supports up to 3 queries per second (QPS). For higher limits, consider using the Deepseek API or OpenAI API.

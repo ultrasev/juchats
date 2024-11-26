@@ -7,7 +7,7 @@
 
 </div>
 
-# [Juchats](https://dlj.one/RNFYxz9) API 封装
+# [Juchats](https://ioly.cc/RNFYxz9) API 封装
 
 [English](README_EN.md) | [中文](README.md)
 
@@ -23,7 +23,7 @@ pip3 install juchats
 
 # 使用方法
 
-首先，从 [Juchats](https://dlj.one/RNFYxz9) 官方网站获取令牌（jtoken），并将其放入 `.env` 文件中。
+首先，从 [Juchats](https://ioly.cc/RNFYxz9) 官方网站获取令牌（jtoken），并将其放入 `.env` 文件中。
 令牌获取方式就很简单了，浏览器上开 F12，刷新一下界面，随便找一个带有 hermchats.com 的链接，从 Cookie 中找到 `jtoken` 字段，复制即可。
 
 ```bash
