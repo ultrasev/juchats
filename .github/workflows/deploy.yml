@@ -1,14 +1,42 @@
-name: Deploy juchats to naran server
+name: Deploy juchats to miky server
 
 on:
   push:
     branches:
       - deploy-vps
-  schedule:
-    - cron: '30 3 * * *' # 每天3点30分触发
+
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-asyncio httpx
+          pip install -r requirements.txt
+
+      - name: Create .env file for testing
+        env:
+          ENV_CONTENT: ${{ secrets.JUCHATS_ENV }}
+        run: |
+          echo "$ENV_CONTENT" | base64 -d > .env
+
+      - name: Run tests
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          pytest tests/
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
