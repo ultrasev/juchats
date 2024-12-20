@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio httpx poetry
+          pip install pytest pytest-asyncio httpx poetry pydantic
           poetry install
 
       - name: Create .env file for testing
