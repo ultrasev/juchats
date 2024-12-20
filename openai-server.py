@@ -5,8 +5,7 @@ from pydantic import BaseModel
 from juchats.chat import Juchats
 import time
 import json
-import asyncio
-from loguru import logger
+from juchats.utils import logger
 
 app = FastAPI()
 

@@ -1,13 +1,11 @@
-import asyncio
 import json
 import typing
 from uuid import uuid4
 import time
 
 import httpx
-import pydantic
 import websockets
-from loguru import logger
+from .utils import logger
 import redislite
 
 from .configs import APIS, HEADERS
