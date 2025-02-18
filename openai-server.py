@@ -47,14 +47,22 @@ async def chat_completion(request: Request, chat_request: ChatCompletionRequest)
 
         if chat_request.stream:
             async def event_generator():
-                try:
-                    async for chunk in juchats.stream_chat(prompt):
-                        yield f"data: {json.dumps(format_chunk(chunk, chat_request))}\n\n"
-                    yield "data: [DONE]\n\n"
-                except Exception as e:
-                    error_message = f"Error during streaming: {str(e)}"
-                    logger.error(error_message)
-                    yield f"data: {json.dumps({'error': error_message})}\n\n"
+                retries = 0
+                max_retries = 5
+                while retries < max_retries:
+                    try:
+                        async for chunk in juchats.stream_chat(prompt):
+                            yield f"data: {json.dumps(format_chunk(chunk, chat_request))}\n\n"
+                        yield "data: [DONE]\n\n"
+                        break  # Exit the loop if successful
+                    except Exception as e:
+                        retries += 1
+                        error_message = f"Error during streaming: {str(e)} (Attempt {retries}/{max_retries})"
+                        logger.error(error_message)
+                        if retries >= max_retries:
+                            yield f"data: {json.dumps({'error': error_message})}\n\n"
+                            break  # Exit the loop after max retries
+                        await asyncio.sleep(1)  # Optional: wait before retrying
 
             return StreamingResponse(event_generator(), media_type="text/event-stream")
         else:
