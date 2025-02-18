@@ -11,9 +11,9 @@
 
 [English](README_EN.md) | [中文](README.md)
 
-C 大产品 [hermchats](https://hermchats.com) 的 API 封装，可以无缝集成到代码中，用于数据分析、清洗或者对话生成都还不错。支持 GPT-4、o1-mini、Claude Sonnet、deepseek 等一众模型（参考下面模型列表）。 Hermchats 新模型上的很快，像 `o1-mini` 这样的模型，官方上线后，Hermchats 很快就会支持。
+C 大产品 [juchats](https://juchats.com) 的 API 封装，可以无缝集成到代码中，用于数据分析、清洗或者对话生成都还不错。支持 GPT-4、o1-mini、Claude Sonnet、deepseek 等一众模型（参考下面模型列表）。 juchats 新模型上的很快，像 `o1-mini` 这样的模型，官方上线后，juchats 很快就会支持。
 
-针对不同模型，免费用户每天都有几十次到上千次不等的使用次数，比如，每天可以使用 claude-sonnet-3.5 进行 30 轮对话，用 deepseek 进行 10000 次对话，非常良心的网站，有需要的可以付费支持一下 [hermchats](https://hermchats.com)。
+针对不同模型，免费用户每天都有几十次到上千次不等的使用次数，比如，每天可以使用 claude-sonnet-3.5 进行 30 轮对话，用 deepseek 进行 10000 次对话，非常良心的网站，有需要的可以付费支持一下 [juchats](https://juchats.com)。
 
 # 安装
 
@@ -24,7 +24,7 @@ pip3 install juchats
 # 使用方法
 
 首先，从 [Juchats](https://ioly.cc/RNFYxz9) 官方网站获取令牌（jtoken），并将其放入 `.env` 文件中。
-令牌获取方式就很简单了，浏览器上开 F12，刷新一下界面，随便找一个带有 hermchats.com 的链接，从 Cookie 中找到 `jtoken` 字段，复制即可。
+令牌获取方式就很简单了，浏览器上开 F12，刷新一下界面，随便找一个带有 juchats.com 的链接，从 Cookie 中找到 `jtoken` 字段，复制即可。
 
 ```bash
 JTOKEN=your_token

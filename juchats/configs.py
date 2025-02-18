@@ -1,9 +1,10 @@
 
 class APIS(object):
-    MODES = 'https://www.hermchats.com/gw/chatweb/gpt/modes'
-    WSS='wss://www.hermchats.com/gw/chatgpt/ws/{}'
-    DIALOGS='https://www.hermchats.com/gw/chatweb/gpt/dialogs'
-    CREATE_DIALOG='https://www.hermchats.com/gw/chatweb/gpt/createDialog'
+    MODES = 'https://www.juchats.com/gw/chatweb/gpt/modes'
+    WSS='wss://www.juchats.com/gw/chatgpt/ws/{}'
+    CHAT='https://www.juchats.com/gw/chatgpt/gpt/completions'
+    DIALOGS='https://www.juchats.com/gw/chatweb/gpt/dialogs'
+    CREATE_DIALOG='https://www.juchats.com/gw/chatweb/gpt/createDialog'
 
 
 HEADERS = {
@@ -13,10 +14,10 @@ HEADERS = {
     'content-type': 'application/json',
     'dnt': '1',
     'noninductive': 'true',
-    'origin': 'https://www.hermchats.com',
+    'origin': 'https://www.juchats.com',
     'pragma': 'no-cache',
     'priority': 'u=1, i',
-    'referer': 'https://www.hermchats.com/chat/MTE0NTEK',
+    'referer': 'https://www.juchats.com/chat/MTE0NTEK',
     'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"macOS"',
