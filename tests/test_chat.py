@@ -10,7 +10,7 @@ load_dotenv()
 def juchats_client():
     token = os.getenv('JTOKEN')
     assert token is not None, "JTOKEN is not set"
-    return Juchats(token, model='deepseek-chat')
+    return Juchats(token, model='deepseek-ai/deepseek-v3')
 
 
 @pytest.mark.asyncio
@@ -20,7 +20,7 @@ async def test_chat(juchats_client):
 
 @pytest.mark.asyncio
 async def test_chat_stream(juchats_client):
-    query = "请用三句话介绍人工智能。"
+    query = "请用中文三句话介绍人工智能。"
     responses = []
     async for chunk in juchats_client.stream_chat(query):
         assert isinstance(chunk, str), "Each chunk should be a string"

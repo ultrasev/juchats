@@ -112,6 +112,22 @@ class Juchats(object):
     async def get_type(self) -> int:
         return 10
 
+    async def _process_sse_line(self, line: str) -> typing.Optional[dict]:
+        """Process a single SSE line and return parsed JSON if valid."""
+        if not line.strip():
+            return None
+            
+        if line.startswith('data:'):
+            data = line[5:].strip()  # Remove 'data:' prefix
+            if data == '[DONE]':
+                return None
+            try:
+                return json.loads(data)
+            except json.JSONDecodeError:
+                logger.error(f"Failed to parse JSON: {data}")
+                return None
+        return None
+
     async def chat(
         self,
         query: str,
@@ -120,42 +136,42 @@ class Juchats(object):
         await self._ensure_initialized()
         dialog_id = await self.get_dialog_id()
         model_id = await self.get_model_id()
-        _type = await self.get_type()
-        async with websockets.connect(APIS.WSS.format(self.token),
-                                      extra_headers=self._header) as ws:
-            message = {
-                "contextId": '',
-                "dialogId": dialog_id,
-                "event": 1,
-                "fileUuid": "",
-                "languageTypeId": 0,
-                "modeId": model_id,
-                "prompt": query,
-                "requestId": str(uuid4()),
-                "type": _type,
-            }
+        
+        request_id = str(uuid4())
+        payload = {
+            "prompt": query,
+            "requestId": request_id,
+            "modeId": model_id,
+            "contextId": "",
+            "dialogId": dialog_id,
+            "languageTypeId": 0,
+            "fileUuid": "",
+            "tools": [
+                # {
+                #     "name": "Browsing",
+                #     "id": "BROWSING"
+                # }
+            ]
+        }
 
-            await ws.send(json.dumps(message))
-
-            try:
+        async with httpx.AsyncClient() as client:
+            async with client.stream('POST', APIS.CHAT, json=payload, headers=self._header) as response:
                 text = ''
-                while True:
-                    response = await ws.recv()
-                    if '[DONE]' in response:
-                        return text
-                    js = json.loads(response)
-                    content = js.get('data', {}).get('content')
+                async for line in response.aiter_lines():
+                    data = await self._process_sse_line(line)
+                    if not data:
+                        continue
+                        
+                    content = data.get('data', {}).get('content', '')
                     if content:
                         text += content
                         if show_stream:
                             print(content, end="", flush=True)
-                    if int(js.get('code', 200)) != 200:
-                        logger.info(js)
-                        return text
-            except websockets.ConnectionClosed:
-                logger.error("Connection closed by the server.")
-            except Exception as e:
-                logger.error(f"Error occurred: {e}")
+                    if data.get('code') != 200:
+                        logger.info(data)
+                        break
+                
+                return text
 
     async def stream_chat(
         self,
@@ -164,36 +180,34 @@ class Juchats(object):
         await self._ensure_initialized()
         dialog_id = await self.get_dialog_id()
         model_id = await self.get_model_id()
-        _type = await self.get_type()
-        async with websockets.connect(APIS.WSS.format(self.token),
-                                      extra_headers=self._header) as ws:
-            message = {
-                "contextId": '',
-                "dialogId": dialog_id,
-                "event": 1,
-                "fileUuid": "",
-                "languageTypeId": 0,
-                "modeId": model_id,
-                "prompt": query,
-                "requestId": str(uuid4()),
-                "type": _type,
-            }
+        
+        request_id = str(uuid4())
+        payload = {
+            "prompt": query,
+            "requestId": request_id,
+            "modeId": model_id,
+            "contextId": "",
+            "dialogId": dialog_id,
+            "languageTypeId": 0,
+            "fileUuid": "",
+            "tools": [
+                # {
+                #     "name": "Browsing",
+                #     "id": "BROWSING"
+                # }
+            ]
+        }
 
-            await ws.send(json.dumps(message))
-
-            try:
-                while True:
-                    response = await ws.recv()
-                    if '[DONE]' in response:
-                        break
-                    js = json.loads(response)
-                    content = js.get('data', {}).get('content')
+        async with httpx.AsyncClient() as client:
+            async with client.stream('POST', APIS.CHAT, json=payload, headers=self._header) as response:
+                async for line in response.aiter_lines():
+                    data = await self._process_sse_line(line)
+                    if not data:
+                        continue
+                        
+                    content = data.get('data', {}).get('content', '')
                     if content:
                         yield content
-                    if int(js.get('code', 200)) != 200:
-                        logger.info(js)
+                    if data.get('code') != 200:
+                        logger.info(data)
                         break
-            except websockets.ConnectionClosed:
-                logger.error("Connection closed by the server.")
-            except Exception as e:
-                logger.error(f"Error occurred: {e}")
