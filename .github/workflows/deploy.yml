@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - deploy-vps
-  schedule:
-    - cron: '30 3 * * *' # 每天3点30分触发
 
 jobs:
   deploy:
